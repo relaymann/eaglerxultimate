@@ -1,4 +1,4 @@
-<escape>{
+{
   "source_archive": "ultimate.zip",
   "source_archive_sha256": "4452e1411ae922d4b664392f3a7971ae52cacf267d439bfd73262368840df149",
   "inspected_files": {
@@ -47,4 +47,4 @@
     "This report does not establish EaglerXServer, Forge backend, or modpack multiplayer compatibility.",
     "The archive contains browser client builds and assets; it does not contain a dedicated Forge server distribution or the original mod JAR collection."
   ]
-}</escape>
+}
