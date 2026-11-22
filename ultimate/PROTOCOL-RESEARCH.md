@@ -122,3 +122,9 @@ Consequently, the existing extension point is useful for Eagler-side protocol ne
 ## Next capture needed before writing a packet codec
 
 Static inspection cannot establish the exact runtime wire behavior. The next decisive artifact is a packet trace from this exact browser build connecting to a controlled test endpoint (or a local server harness) that records the initial Eagler handshake, Minecraft protocol selection, custom-payload registration, FML handshake sequence, and disconnect reason. Do not guess packet IDs or strip unknown payloads.
+
+## Additional EaglerXServer hardening during the audit
+
+The registration path in `RewindService.registerLegacyProtocol` previously allowed two different translator instances to claim the same legacy protocol ID. The later registration overwrote the lookup array entry; unregistering the earlier instance could then clear the later instance's entry. Registration now checks the ID lookup under the write lock and rejects a collision before modifying the registry.
+
+This is a general EaglerXServer correctness fix, not an Ultimate protocol implementation. It prevents ambiguous translator dispatch while the new compatibility work adds more protocol handlers.
