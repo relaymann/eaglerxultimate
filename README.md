@@ -19,7 +19,7 @@ These strings establish what is present in the client bundle; they do **not** pr
 
 Static inspection of the supplied source map found 13,726 source paths, including the legacy Minecraft packet layer, Forge Mod Loader handshake classes, Eagler WebSocket transport classes, and 107 mod-network class paths in the inspected families. The source map contains class paths but no embedded original source text. This is evidence of client-side code only, not proof of server support.
 
-See [Ultimate protocol research](ultimate/PROTOCOL-RESEARCH.md), the [proposed gateway/backend architecture](ultimate/ARCHITECTURE.md), the [browser launch configuration](ultimate/CLIENT-LAUNCH.md), the [modpack inventory](ultimate/MODPACK.md), and the [reproducible client inventory and hashes](ultimate/client-inventory.json).
+See [Ultimate protocol research](ultimate/PROTOCOL-RESEARCH.md), the [proposed gateway/backend architecture](ultimate/ARCHITECTURE.md), the [browser launch configuration](ultimate/CLIENT-LAUNCH.md), the [modpack inventory](ultimate/MODPACK.md), the [reproducible client inventory and hashes](ultimate/client-inventory.json), and the [development session log](ultimate/SESSION-LOG.md).
 
 ## Existing EaglerXServer foundation
 
