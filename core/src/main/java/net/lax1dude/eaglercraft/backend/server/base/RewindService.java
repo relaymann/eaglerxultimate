@@ -90,6 +90,13 @@ public class RewindService<PlayerObject> implements IEaglerXRewindService<Player
 		}
 		registerLock.writeLock().lock();
 		try {
+			for (int i = 0; i < protocols.length; ++i) {
+				IEaglerXRewindProtocol<PlayerObject, ?> existing = protocolIds[protocols[i]];
+				if (existing != null && existing != protocolHandler) {
+					throw new UnsupportedOperationException(
+							"Legacy protocol version is already registered: " + protocols[i]);
+				}
+			}
 			if (registeredProtocols.putIfAbsent(protocolHandler, protocols) == null) {
 				for (int i = 0; i < protocols.length; ++i) {
 					protocolIds[protocols[i]] = protocolHandler;
