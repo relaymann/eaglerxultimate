@@ -1,8 +1,11 @@
 import io
 import json
+import tempfile
 import unittest
+import zipfile
+from pathlib import Path
 
-from tools.ultimate_client_audit import MARKERS, scan_source_map, scan_stream
+from tools.ultimate_client_audit import MARKERS, scan_path, scan_source_map, scan_stream
 
 
 class UltimateClientAuditTests(unittest.TestCase):
@@ -43,6 +46,28 @@ class UltimateClientAuditTests(unittest.TestCase):
             result["groups"]["eagler_websocket_client_layer"]["present"],
         )
         self.assertIn("appeng/common/network/AppEngPacket.java", result["mod_network_classes"])
+
+
+    def test_scans_zip_and_optional_source_map(self):
+        with tempfile.TemporaryDirectory() as directory:
+            archive_path = Path(directory) / "ultimate.zip"
+            source_map = {
+                "sources": [
+                    "cpw/mods/fml/common/network/FMLPacket.java",
+                    "net/lax1dude/eaglercraft/socket/EaglerNetworkManagerClientWS.java",
+                ]
+            }
+            with zipfile.ZipFile(archive_path, "w") as archive:
+                archive.writestr("javascript_web/classes.js", b"Minecraft 1.6.4")
+                archive.writestr("javascript_web/classes.js.map", json.dumps(source_map))
+
+            scanned, findings, inventory = scan_path(archive_path)
+            self.assertEqual(scanned, "javascript_web/classes.js")
+            self.assertTrue(findings["minecraft_1_6_4"])
+            self.assertEqual(inventory["source_count"], 2)
+            self.assertEqual(
+                len(inventory["groups"]["forge_fml_handshake_layer"]["present"]), 1
+            )
 
     def test_source_map_rejects_invalid_sources_type(self):
         with self.assertRaises(ValueError):
