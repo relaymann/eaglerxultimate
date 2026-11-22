@@ -62,3 +62,63 @@ The current `rewind_v1_5` source confirms why simply enabling the existing trans
 - Its handshake codec then negotiates the EaglerXRewind login with the 1.8 backend.
 
 Ultimate identifies itself as a Forge 1.6.4 modpack client. Therefore the 1.5.2 translator is a reference for how to plug a translator into EaglerXServer, not a compatible Ultimate translator. A Forge 1.6.4 backend must receive the correct 1.6.4/FML exchange; translating it to a vanilla 1.8 Paper backend would discard the modpack's server-side requirements.
+
+## Deeper source-map inventory from the supplied 318 MiB ZIP
+
+A second pass inspected `javascript_web/classes.js.map` in the user-provided archive. The map lists 13,726 source paths and contains no `sourcesContent` array, so it exposes class names but not recoverable original Java source text.
+
+The inventory includes these concrete client-side layers:
+
+### Minecraft 1.6-era packet classes
+
+- `net/minecraft/network/packet/Packet.java`
+- `Packet2ClientProtocol.java`
+- `Packet250CustomPayload.java`
+- `NetLoginHandler.java`
+- `NetServerHandler.java`
+
+### Forge Mod Loader handshake classes
+
+- `cpw/mods/fml/common/network/FMLNetworkHandler.java`
+- `FMLPacket.java`
+- `NetworkRegistry.java`
+- `ModListRequestPacket.java`
+- `ModListResponsePacket.java`
+- `ModIdentifiersPacket.java`
+- `ModMissingPacket.java`
+- `ModIdMapPacket.java`
+
+### Forge custom network classes
+
+- `net/minecraftforge/common/network/ForgeNetworkHandler.java`
+- `ForgePacketHandler.java`
+- `ForgePacket.java`
+- `packet/DimensionRegisterPacket.java`
+
+### Eagler browser transport classes
+
+- `net/lax1dude/eaglercraft/socket/EaglerNetworkManagerClientWS.java`
+- `socket/protocol/client/GameProtocolMessageController.java`
+- `ClientV3MessageHandler.java`
+- `ClientV4MessageHandler.java`
+
+### Mod-specific packet class families
+
+The map also contains packet/network class paths under Applied Energistics (`appeng/common/network/`), BuildCraft (`buildcraft/core/network/`, `buildcraft/transport/network/`), Galacticraft (`micdoodle8/mods/galacticraft/core/network/`), Aether (`net/aetherteam/aether/packets/`), Railcraft (`mods/railcraft/common/util/network/`), and Waila (`mcp/mobius/waila/network/`), among others.
+
+This is strong evidence that the browser bundle includes the client-side implementations for a number of mod network handlers. It is **not** evidence that an EaglerXServer or a generic Forge server already supports those packets. A compatible backend must run matching server-side mods and honor their registration, packet direction, payload formats, and world state.
+
+## EaglerXServer extension-point constraints
+
+Inspection of the fork's actual rewind API shows:
+
+- `IEaglerXRewindProtocol` registers handlers by a one-byte legacy Eagler protocol ID.
+- `IEaglerXRewindInitializer` can rewrite the initial Eagler handshake and inject Netty handlers.
+- The rewind message controller operates on Eagler game-message packets, not an arbitrary raw TCP socket.
+- The existing `rewind_v1_5` implementation rewrites its client to Eagler protocol 5 / Minecraft protocol 47 and performs the EaglerXRewind login exchange.
+
+Consequently, the existing extension point is useful for Eagler-side protocol negotiation and packet translation, but it is not by itself a generic Forge TCP proxy. A real Ultimate implementation must explicitly bridge the Eagler WebSocket message framing to the 1.6.4 backend's packet framing, and preserve FML/custom-payload traffic end-to-end.
+
+## Next capture needed before writing a packet codec
+
+Static inspection cannot establish the exact runtime wire behavior. The next decisive artifact is a packet trace from this exact browser build connecting to a controlled test endpoint (or a local server harness) that records the initial Eagler handshake, Minecraft protocol selection, custom-payload registration, FML handshake sequence, and disconnect reason. Do not guess packet IDs or strip unknown payloads.
