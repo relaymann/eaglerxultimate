@@ -1,0 +1,50 @@
+<escape>{
+  "source_archive": "ultimate.zip",
+  "source_archive_sha256": "4452e1411ae922d4b664392f3a7971ae52cacf267d439bfd73262368840df149",
+  "inspected_files": {
+    "javascript_web/classes.js": {
+      "bytes": 158924909,
+      "sha256": "6c0ce855c59316bb7ff6def3a400f5bbca81ffd477ca6517d0246d0fb70c9a1f"
+    },
+    "javascript_web/classes.js.map": {
+      "bytes": 56825227,
+      "sha256": "6568dda97df91a921d5d04c09aba652aa57e59d25565f40ec5cd660216ccc787"
+    },
+    "wasm_gc_jspi_web/index.html": {
+      "bytes": 2445,
+      "sha256": "5238de2f2fb1bfffe3e9344b06bb67ae0542b39fc10ad2d771ba2f761ba4e2e6"
+    },
+    "wasm_gc_legacy_web/index.html": {
+      "bytes": 2445,
+      "sha256": "5238de2f2fb1bfffe3e9344b06bb67ae0542b39fc10ad2d771ba2f761ba4e2e6"
+    }
+  },
+  "source_map": {
+    "source_path_count": 13726,
+    "sources_content_embedded": false,
+    "network_source_groups": {
+      "minecraft_legacy_packet_layer": 5,
+      "forge_fml_handshake_layer": 8,
+      "forge_custom_network_layer": 4,
+      "eagler_websocket_client_layer": 4,
+      "integrated_server_layer": 2
+    },
+    "mod_network_class_paths_found": 107,
+    "mod_network_class_path_counts": {
+      "applied_energistics": 33,
+      "buildcraft_core": 16,
+      "buildcraft_transport": 6,
+      "galacticraft_core": 12,
+      "aether": 11,
+      "railcraft": 21,
+      "waila": 7,
+      "tinkers_construct": 1
+    }
+  },
+  "interpretation": [
+    "The source map exposes class paths but does not embed original source text.",
+    "Class-path presence is evidence of client-side compiled code only.",
+    "This report does not establish EaglerXServer, Forge backend, or modpack multiplayer compatibility.",
+    "The archive contains browser client builds and assets; it does not contain a dedicated Forge server distribution or the original mod JAR collection."
+  ]
+}</escape>
