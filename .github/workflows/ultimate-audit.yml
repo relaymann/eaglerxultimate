@@ -30,4 +30,4 @@ jobs:
           distribution: temurin
           java-version: "17"
       - name: Build EaglerXServer modules
-        run: ./gradlew build --no-daemon
+        run: bash ./gradlew build --no-daemon
