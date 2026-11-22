@@ -52,3 +52,13 @@ Do not mark a mod as supported merely because the client contains its classes or
 ## Safety and compatibility rule
 
 The first prototype must fail closed on an unknown or incomplete FML handshake. It must not silently strip mod channels or pretend a vanilla login is a successful modded login; doing so can corrupt inventories, block states, entities, or world data.
+
+## Existing rewind implementation checked
+
+The current `rewind_v1_5` source confirms why simply enabling the existing translator is not a solution:
+
+- `RewindProtocol.getLegacyProtocols()` returns protocol ID `69` for its Eaglercraft 1.5.2 client.
+- Its initializer rewrites the Eagler handshake to Eagler protocol `5` and Minecraft protocol `47` (Minecraft 1.8), identifying itself as `EaglerXRewind` / `1.5.2`.
+- Its handshake codec then negotiates the EaglerXRewind login with the 1.8 backend.
+
+Ultimate identifies itself as a Forge 1.6.4 modpack client. Therefore the 1.5.2 translator is a reference for how to plug a translator into EaglerXServer, not a compatible Ultimate translator. A Forge 1.6.4 backend must receive the correct 1.6.4/FML exchange; translating it to a vanilla 1.8 Paper backend would discard the modpack's server-side requirements.
